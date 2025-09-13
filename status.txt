@@ -1,0 +1,3 @@
+Bryce Bernstein
+
+I will be using Kali Linux on my M1 Macbook Pro. It is fully set up currently, and I am writing this document on my installation. I have installed some extra stuff that lets me copy and paste from my actual computer into the virtual machine. I also installed neovim, my preferred command-line text editor.
