@@ -1,0 +1,51 @@
+Bandit Level 0 -> Level 1
+ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If
+Obtained through using cat command on the readme to discover password. The pedagogical purpose of this level is that cat is a very useful tool that continues to serve an important purpose throughout all future levels
+
+Bandit Level 1 -> Level 2
+263JGJPfgU6LtdEvgfWU1XP5yac29mFx
+I used < to redirect the contents of - into cat so it would print out the password. I followed the helpful reading material of googling dashed filename. The actual command is simply "cat < -," and knowing it is important for understanding a way to read files with dashes in the name (or just a single dash in this case)
+
+Bandit Level 2 -> Level 3
+MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx
+I used < to redirect again, and I used "\ " to escape the space character and have it interpreted as part of the filename. Quotation marks also work. The command "cat < "--spaces in this filename--"" gets the password. This is a good way to show how spaces can be ignored for these puzzles.
+
+Bandit Level 3 -> Level 4
+2WmrDFRmJIq3IPxneAaMGhap0pFhF3NJ
+I entered the inhere directory and used ls -a to reveal hidden files. Then it was just a matter of cat. The sequence of commands was "cd inhere," "ls -a," and "cat ...Hiding-From-You." This teaches how to find hidden files as well as digging a little deeper than just the user directory.
+
+Bandit Level 4 -> Level 5
+4oQYVPkxZOOEOO5pTW81FB8j8lxXGUQw
+I used the redirecting trick for cat with dashed files. I brute forced it by trying the files until one was readable. I find it unlikely that this is how it was intended to be solved, so I don't necessarily know the intended knowledge, but I think it shows that sometimes you can use a dumb solution for a problem that seems complex.
+
+Bandit Level 5 -> Level 6
+HWasnPhtq9AVKe0dmk45nxy20cvUa6EG
+I used the find command with the established number of bytes "find -size 1033c" and it showed me where to look. This gives a light introduction to the find command before it must be used in more complex settings, which is welcome.
+
+Bandit Level 6 - Level 7
+morbNTDkSW6jIlUc0ymOdMaLnOlFVAaj
+I used find to search for files with the desired properties, starting from the root directory. My commands were as follows "cd /," "find -size 33c -user bandit7 -group bandit6 | grep password | cat." Ignoring the stderr output, we then see the file where we need to look. This teaches how to use the find command more intricately and it also lets users get more experience with piping.
+
+Bandit Level 7 -> Level 8
+dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc
+I piped the output of cat data.txt into "grep millionth," which made it so the only line to show up was the one I needed. My bash command was "cat data.txt | grep millionth," and this teaches some familiarity with grep.
+
+Bandit Level 8 -> Level 9
+4CKMh1JI91bUIZZPXDqGanal4xvAg0JM
+I sorted the data.txt file so that I could use the uniq command. By using the -u tag with the uniq command it only outputted the unique line, which was stated to be the password. My command was "sort data.txt | uniq -u." For me, this just taught some resilience at learning about new commands and how I can use them.
+
+Bandit Level 9 -> Level 10
+FGUW5ilLVJrxX9kMYMmlN4MgbpfMiqey
+I used the strings command on data.txt and looked for many = signs. It said "the password is" and then what you see above. The command itself was "strings data.txt | grep ==." This taught the strings command. I'm still not sure this is how it was intended to be solved, but it is a pretty efficient solution.
+
+Bandit Level 10 -> Level 11
+dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr
+I did "cat data.txt | base64 -d," which decodes the data from data.txt into regular text. This teaches about decoding base64 in a very simple way, which is appreciated.
+
+Bandit Level 11 -> Level 12
+7x16WNeHIi5YkIhWsfFIqoognUTyj9Q4
+Looking at the linked Wikipedia, there was a tr script for changing from ROT13 to regular text. I piped the cat output of data.txt into the script with the command "cat data.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'". This teaches about the 'tr' command, which apparently stands for translate. It also shows some other ways the true identities may be hidden.
+
+Bandit Level 12 -> Level 13
+FO5dwFsc0cbaIiH0h8J2eUks2vdTDwAn
+This one was complicated and I don't know that I can express the exact steps, but what I had to do was make a temp directory and then undump it using xxd -r. From here, I ran it through different decompressors, of which only one would work each step, until I got a clear answer for what the password is. At this point, I was finished. Here, I learned about compression commands and that different formats are sufficiently different to not be readable by different methods.
