@@ -1,3 +1,5 @@
+Bryce Bernstein
+
 Bandit Level 0 -> Level 1
 ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If
 Obtained through using cat command on the readme to discover password. The pedagogical purpose of this level is that cat is a very useful tool that continues to serve an important purpose throughout all future levels
