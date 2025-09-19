@@ -1,0 +1,42 @@
+Bryce Bernsteins
+
+=======DAYTIME QUESTIONS=======
+Question 1
+1  192.168.64.2  132.163.96.1  TCP  [SYN]...
+2  132.163.96.1  192.168.64.2  TCP  [SYN, ACK]...
+3  192.168.64.2  132.168.96.1  TCP  [ACK]...
+The first line is the computer telling the server it would like to communicate. The second line is the server saying that the message was received and it would like to communicate back. The third line is the computer saying it got the server's message.
+
+Question 2
+Kali is using port 51840. It uses this port to connect to port 13 on the server's side. The server knows what port to communicate within Kali because Kali includes that information in the initial TCP message. 
+
+Question 3
+The client needs a port to tell the server where to return the data. Any one computer is likely doing many different communication tasks at once, so if the server sent data back to the client without a port, the client operating system would not necessarily know where to delegate that message. However, because the client has a port, this is unnecessary.
+
+Question 4
+Frame 4 contains the date and time. Unlike every other frame, this frame uses the DAYTIME protocol instead of the TCP protocol. The Frame Summary is:
+4  132.164.96.1  192.168.62.2  DAYTIME  DAYTIME Response
+
+Question 5
+[SYN] is merely how the client tells the server it would like to start communicating. This is necessary before communication itself begins so the server can prepare itself to receive further messages and the client can know the server has received its initial message. On that subject, the [ACK] tag is used to indicate that the previous message was received and the next step of the handshake can begin. Importantly, the server sends a [SYN] tag back to the client and the client sends an [ACK] tag back to the server. These tags effectively tell the client and server that the other is ready to communicate.
+
+Question 6
+The server is responsible for initiating the connection closing. We can see this in tag number 5, where the info contains [FIN]. Something I find interesting about this is that the connection is closed before the client ever indicates that it received the message from the server.
+
+
+=======HTTP=======
+Question 1
+There are two TCP connections opened when I query the doman. Interestingly, both are opened immediately, rather than one being opened intially and another being opened after the browser discovers it needs more calls. I can tell two connections are opened by filtering wireshark to only show tcp calls where the SYN flag is set. There are two pairs of these flags, so two connections are opened.
+
+Question 2
+The request for the homepage happens quite early in the sequence of calls. The first thing that isn't part of a handshake is this request. The frame summary is:
+7  192.168.64.2  172.233.221.124  HTTP  GET  /index.html HTTP/1.1
+In short, the local computer makes a get request for /index.html, which is why I say this is the request that asks for index.html.
+
+Question 3
+The request for jeff-square-calorado.jpg happens shortly after this request. Again, I am identifying it as the desired request because it is an HTTP request asking for the specific file in question. The frame summary is:
+11  192.168.64.2  172.233.221.124  HTTP  GET /jeff-square-colorado.jpg HTTP/1.1
+
+
+=======QUESTIONS=======
+One thing I would love to know is what the other flags I see in Wireshark mean. For example, I see many PSH flag TCP messages throughout the call to jeffondich.com. Additionally, why are so many TCP requests made just to get a very simple HTML document, especially considering HTTPS is not used? 
