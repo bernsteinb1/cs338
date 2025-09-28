@@ -1,0 +1,39 @@
+=====Diffie-Hellman Key Exchange=====
+The shared secret is 31. I found this by writing a short script to compute the possible identities of Alice's secret. Once I knew Alice's secret, I simply plugged it into the formula to find out what the shared secret is. I also fact-checked my answer by doing the same formula for Bob's secret key and I got the same shared secret. This only works with small numbers because it is a brute force approach. My computer can easily brute force it when there are 103 possible values, but my computer would fail to do so if there were 2^1023 possible numbers simply because it would take too long. In practice, 1024 bit numbers seem to be used, so it becomes infeasible with these large numbers. Effectively, my loop would never finish if the list of possible numbers were so big.
+ 
+Here is my work:
+# alice_key.py
+# prints 45, Alice's secret key
+for i in range(1, 104):
+    if 5 ** i % 103 == 10:
+    	print(i)
+
+# this then prints out the key, which is 31
+print(71 ** 45 % 103)
+
+=====RSA Message Decryption===
+I wrote a script to find out what p and q are, which let me find out what the least common multiple of (p-1), (q-1) is. I then used another loop to find possible values of d, it should not matter which one I choose. After decoding, I had some random list that I was unsure how to use. I used my ideas of the secret key along with the known public key to encode and decode a message of my own crafting, just to make sure I had the key correct. I found that I did, so I banged my head against the wall for a while and found out that the data is encoded as 2 characters at a time turned into a number. I used floor division by 256 to get the first character and modulus of 256 to get the second character. Compiling this into a message, it reads:
+
+"Hey Bob, here's some cryptography history for you (https://en.wikipedia.org/wiki/The_Magic_Words_are_Squeamish_Ossifrage). Happy factoring, Alice."
+
+Thinking about where my code would fail with larger numbers, it once again lies in my loop. It is not computationally feasible to find the two prime factors of an exceptionally large number. Similarly, it is more challenging to calculate the secret key, even if you found the prime factors. There is no guarantee the secret key is anywhere in the neighborhood of hte first 100,000 integers (or even the first googol, realistically). Alice's encoding scheme is not secure because there are finite ways to combine two letters. It is effectively swapping out two characters instead of swapping out 1, but the same problem exists. You could eventually sub one set for another and end up with a slightly more complex substitution table, but still nothing too hard to figure out. We already see at least one duplicate in this array for 77545.
+
+Here is my work:
+# find prime factors
+for i in range(1, int(math.sqrt(266473))):
+    if 266473 % i == 0:
+    	print(i)
+
+# math.lcm(438, 606) to get lambda
+# calculate secret key
+for i in range(1, 100000):
+    if 17 * i % 44238 == 1:
+	print(i)
+
+# get decrypted message, uses secret key found above
+decrypted = list(map(lambda x: x ** 10409 % 266473, ciphertext))
+
+# decode text
+for pair in decrypted:
+    print(chr(pair // 256), end='')
+    print(chr(pair % 256), end='')
