@@ -1,3 +1,5 @@
+Bryce Bernstein
+
 =====Simple Communication Standards=====
 1. Since we are assuming that AITM is impossible, it would be easiest to use Diffie Hellman to arrive at a shared key for something like AES and then encrypt the message using that shared secret key. This is better than something like public-key encryption because it is faster and prevents an Eve from getting any information.
 
