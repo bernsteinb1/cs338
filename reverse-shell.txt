@@ -1,0 +1,82 @@
+Bryce Bernstein
+=====Part 1=====
+a. You can first upload the file that Jeff gives as an example of a PHP web shell. Then, by adding a command to the get request with the format <URL>?command=<command>, you can have the command executed on the server. For the example of whoami, the returned output is "www-data," suggesting the user is www-data.
+b. the pre tag from google is used for preserving spacing and also uses a monospace font. When I upload the shell without the pre tag, the output still comes out, but all new lines are removed and no monospace font is used. This makes it much more difficult to parse the output and in some cases (where new lines have semantic meaning) it might become impossible to make sense of the output.
+
+=====Part 2=====
+a. pwd returns the following "/var/www/danger.jeffondich.com/uploadedimages." This tells us that the website itself is stored in /var/www/danger.jeffondich.com
+b. Using getent passwd gives you a list of many accounts. Here is the full output:
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-network:x:100:102:systemd Network Management,,,:/run/systemd:/usr/sbin/nologin
+systemd-resolve:x:101:103:systemd Resolver,,,:/run/systemd:/usr/sbin/nologin
+messagebus:x:102:105::/nonexistent:/usr/sbin/nologin
+systemd-timesync:x:103:106:systemd Time Synchronization,,,:/run/systemd:/usr/sbin/nologin
+syslog:x:104:111::/home/syslog:/usr/sbin/nologin
+_apt:x:105:65534::/nonexistent:/usr/sbin/nologin
+tss:x:106:112:TPM software stack,,,:/var/lib/tpm:/bin/false
+uuidd:x:107:113::/run/uuidd:/usr/sbin/nologin
+tcpdump:x:108:114::/nonexistent:/usr/sbin/nologin
+usbmux:x:109:46:usbmux daemon,,,:/var/lib/usbmux:/usr/sbin/nologin
+sshd:x:110:65534::/run/sshd:/usr/sbin/nologin
+pollinate:x:111:1::/var/cache/pollinate:/bin/false
+landscape:x:112:116::/var/lib/landscape:/usr/sbin/nologin
+fwupd-refresh:x:113:117:fwupd-refresh user,,,:/run/systemd:/usr/sbin/nologin
+jeff:x:1000:1000:Jeff Ondich,,,:/home/jeff:/bin/bash
+postgres:x:114:119:PostgreSQL administrator,,,:/var/lib/postgresql:/bin/bash
+bullwinkle:x:1001:1001:Bullwinkle J. Moose,,,:/home/bullwinkle:/bin/bash
+dhcpcd:x:115:65534:DHCP Client Daemon,,,:/usr/lib/dhcpcd:/bin/false
+polkitd:x:999:999:User for polkitd:/:/usr/sbin/nologin
+
+I found this on Stack Exchange (https://unix.stackexchange.com/questions/181311/view-list-of-users)
+
+c. I can't actually open the passwd file for reasons I do not understand. It says the server dropped the connection, even though ls -l says that it is readable by me. Anyways, this file contains the same stuff you can see above from getent passwd, so I'm not too worried about not being able to open it. Basically it shows the username, whether the password is encrypted, a user id, a group id, info on their user id, their home directory, and the path to their shell.
+
+d. We cannot open shadow, but it contains the encrypted passwords for all the users. It also stores some information like when the password was last changed and similar info.
+
+e. One secret I found was the from in the secrets directory of the website. I also found one level deeper the supposed "mater password for everything," but I was not able to use it with sudo. In Jeff's user directory there is a file "youfoundme.txt" that claims not to be th esecret. There is another file "supersecret.txt" which can only be opened with Jeff's password. There are birds in the directory "you won't find this with gobuster"
+
+=====Part 4=====
+a. I found the IP address of the Kali VM by using the command "ip addr" and looking at the eth0 interface.
+
+b. I found the IP address of my Mac by using the command "ifconfig" and looking for the "en0" interface. You can also find out in the system settings. You use the IP for the attacker in the command that you call on Kali to set up the reverse shell.
+
+e. Yes, there is now a shell that lets me execute commands as if it is on Kali. There are several ways to know the shell is in Kali, but the most obvious is that it says kali@kali-cs as the command prompt.
+
+f. The percent codes are an example of percent encoding, which allows for characters that don't normally work to be used in URLs. Most famously, %20 is used for spaces. Others like %26 are &, %3E is >, and %22 is ". Basically, we have taken the command from part 3 and converted it to something that can be used as a web link.
+
+g. Here is a my best attempt at a crude ASCII Diagram. Basically, when you call the URL, the Kali command runs the command in bash that causes the reverse terminal to start. Because you are listening to that port with netcat, you then receive the shell and are able to execute commands on Kali. The diagram goes into a little bit more technical detail, but that is the gist of it.
+
+              HTTP CALL TO WEB SHELL
+HOST COMPUTER ---------------------> KALI VICTIM
+                                           |
+					   \/
+	                             KALI VICTIM executes command
+
+    **THIS PART REPEATS UNTIL SHELL IS EXITED**
+	      SENDS SHELL TO NETCAT		     
+HOST COMPUTER <--------------------- KALI VICTIM
+      |
+      \/
+HOST COMPUTER executes command on shell
+		   SHELL COMMAND
+HOST COMPUTER ---------------------> KALI VICTIM process response
+				     	   |
+           PROCESSED RESPONSE TO COMMAND   \/
+HOST COMPUTER <--------------------- KALI VICTIM
