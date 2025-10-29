@@ -53,11 +53,10 @@ d. We cannot open shadow, but it contains the encrypted passwords for all the us
 e. One secret I found was the from in the secrets directory of the website. I also found one level deeper the supposed "mater password for everything," but I was not able to use it with sudo. In Jeff's user directory there is a file "youfoundme.txt" that claims not to be th esecret. There is another file "supersecret.txt" which can only be opened with Jeff's password. There are birds in the directory "you won't find this with gobuster"
 
 =====Part 4=====
-a. I found the IP address of the Kali VM by using the command "ip addr" and looking at the eth0 interface.
+a. I found the IP address of the Kali VM by using the command "ip addr" and looking at the eth0 interface. It is 192.168.64.2
+b. I found the IP address with the command "ifconfig | grep 192.168.64." This filtered to results that started in the same subdomain as Kali. I found 192.168.64.1 was my local IP. I want to use this IP as opposed to the other IPs my computer has because this IP is the only one that Kali can communicate directly with because they are on the same subnet.
 
-b. I found the IP address of my Mac by using the command "ifconfig" and looking for the "en0" interface. You can also find out in the system settings. You use the IP for the attacker in the command that you call on Kali to set up the reverse shell.
-
-e. Yes, there is now a shell that lets me execute commands as if it is on Kali. There are several ways to know the shell is in Kali, but the most obvious is that it says kali@kali-cs as the command prompt.
+e. Yes, there is now a shell that lets me execute commands as if it is on Kali. There are several ways to know the shell is in Kali, but the most obvious is that it says www-data@kali-cs:/var/www/html$ as the command prompt. I can execute commands
 
 f. The percent codes are an example of percent encoding, which allows for characters that don't normally work to be used in URLs. Most famously, %20 is used for spaces. Others like %26 are &, %3E is >, and %22 is ". Basically, we have taken the command from part 3 and converted it to something that can be used as a web link.
 
